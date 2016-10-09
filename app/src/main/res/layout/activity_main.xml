@@ -10,7 +10,8 @@
     tools:context="com.ksxkq.common.MainActivity">
 
     <TextView
+        android:onClick="testOnClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="TestButton" />
 </RelativeLayout>
