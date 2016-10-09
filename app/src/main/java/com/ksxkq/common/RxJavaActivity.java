@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -17,6 +18,10 @@ import rx.schedulers.Schedulers;
 /**
  * OnePiece
  * Created by xukq on 10/8/16.
+ *
+ * Note:
+ * merge: 合并两个 Observable,两条线合并成一条线,数据类型可以是一样,也可以不一样。
+ * zip: 合并成一个新的
  */
 
 public class RxJavaActivity extends AppCompatActivity {
@@ -37,7 +42,8 @@ public class RxJavaActivity extends AppCompatActivity {
                 subscriber.onNext(list);
                 subscriber.onCompleted();
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<String>>() {
                     @Override
                     public void call(List<String> list) {
@@ -257,6 +263,10 @@ public class RxJavaActivity extends AppCompatActivity {
 //    场景四：定时任务（timer）
 //    在一些情况下我们需要执行定时任务，传统的做法上有两种方式可选择：Timer和SchelchExector。但是在引入rxjava之后，我们有了第三种选择:
 
+    private void concat() {
+
+    }
+
     private void startTimerTask() {
         Observable.timer(2, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
             @Override
@@ -278,7 +288,7 @@ public class RxJavaActivity extends AppCompatActivity {
         });
     }
 
-//    场景十：响应式界面
+    //    场景十：响应式界面
 //
 //            界面元素更新
 //
@@ -304,5 +314,45 @@ public class RxJavaActivity extends AppCompatActivity {
 //            mBtnLogin.setEnabled(isLogin);
 //        }
 //    });
+    private void combineLatest() {
+
+    }
+
+    // 合并同类型的
+    public static void mergeTest() {
+        Observable<String> obs_0 = Observable.from(new String[]{"1", "2", "3"});
+        Observable<String> obs_1 = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                subscriber.onNext("Hello");
+                subscriber.onNext("Hi");
+                subscriber.onNext("Aloha");
+                subscriber.onCompleted();
+            }
+        });
+        Observable<String> obsMerge = Observable.merge(obs_0, obs_1);
+        obsMerge.observeOn(Schedulers.io())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("debug", " onCompleted ");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("debug", " onError ");
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.d("debug", " s = " + s);
+                    }
+                });
+    }
 
 }
