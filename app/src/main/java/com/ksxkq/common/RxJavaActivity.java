@@ -318,7 +318,17 @@ public class RxJavaActivity extends AppCompatActivity {
 
     }
 
-    // 合并同类型的
+    //    Observable.zip(
+//            service.getUserPhoto(id),
+//            service.getPhotoMetadata(id),
+//            (photo, metadata) -> createPhotoWithData(photo, metadata))
+//            .subscribe(photoWithData -> showPhoto(photoWithData));
+    private void zip() {
+
+    }
+
+
+    // 合并同类型的(可以是不同类型,参考上面)  mergerWith 实现和 merge 相同
     public static void mergeTest() {
         Observable<String> obs_0 = Observable.from(new String[]{"1", "2", "3"});
         Observable<String> obs_1 = Observable.create(new Observable.OnSubscribe<String>() {
@@ -353,6 +363,7 @@ public class RxJavaActivity extends AppCompatActivity {
                         Log.d("debug", " s = " + s);
                     }
                 });
+
     }
 
 }
